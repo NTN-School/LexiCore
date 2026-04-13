@@ -94,20 +94,30 @@ ${w.word}
 // ===== QUIZ =====
 
 function quiz(){
+  let w = currentTopic.words[wordIndex]
 
-let w = currentTopic.words[wordIndex]
+  // 👉 Lấy tất cả nghĩa trong topic
+  let allMeanings = currentTopic.words.map(x => x.meaning)
 
-screen.innerHTML = `
+  // 👉 Lọc bỏ đáp án đúng
+  let wrongAnswers = allMeanings.filter(m => m !== w.meaning)
 
-<h2>${w.word} nghĩa là gì?</h2>
+  // 👉 Trộn random
+  wrongAnswers.sort(() => Math.random() - 0.5)
 
-<button class="option" onclick="check('${w.meaning}')">${w.meaning}</button>
-<button class="option" onclick="check('sai')">sai 1</button>
-<button class="option" onclick="check('sai')">sai 2</button>
-<button class="option" onclick="check('sai')">sai 3</button>
+  // 👉 Lấy 3 đáp án sai
+  let options = [w.meaning, ...wrongAnswers.slice(0, 3)]
 
-`
+  // 👉 Trộn lại lần nữa
+  options.sort(() => Math.random() - 0.5)
 
+  // 👉 Render
+  screen.innerHTML = `
+    <h2>${w.word} nghĩa là gì?</h2>
+    ${options.map(o =>
+      `<button class="option" onclick="check('${o}')">${o}</button>`
+    ).join("")}
+  `
 }
 
 // ===== CHECK ANSWER =====
